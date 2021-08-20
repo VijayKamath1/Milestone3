@@ -1,6 +1,7 @@
 package trident.healthx.milestone3.springoauth3.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,9 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+import trident.healthx.milestone3.springoauth3.service.JpaClientDetails;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+
 
 @Configuration
 @EnableAuthorizationServer
@@ -31,6 +35,19 @@ public class AuthenticationManagerConfiguration extends AuthorizationServerConfi
 
     @Value("${alias}")
     private String alias;
+
+    private JpaClientDetails clientDetailsService;
+    private  TokenStore tokenStore;
+
+
+
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.withClientDetails(clientDetailsService);
+    }
+
+
+
 
 
     @Bean
@@ -52,13 +69,11 @@ public class AuthenticationManagerConfiguration extends AuthorizationServerConfi
 
 
     @Override
-     public void configure( AuthorizationServerEndpointsConfigurer endpoints){
-         endpoints.authenticationManager(authenticationManager)
-                 .tokenStore(tokenStore())
-                 .accessTokenConverter(jwtAccessTokenConverter());
-     }
-
-
+    public void configure( AuthorizationServerEndpointsConfigurer endpoints){
+        endpoints.authenticationManager(authenticationManager)
+                .tokenStore(tokenStore())
+                .accessTokenConverter(jwtAccessTokenConverter());
+    }
 
 
 

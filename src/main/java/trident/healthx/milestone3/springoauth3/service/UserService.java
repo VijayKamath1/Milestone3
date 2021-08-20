@@ -1,9 +1,8 @@
 package trident.healthx.milestone3.springoauth3.service;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.stereotype.Service;
-import trident.healthx.milestone3.springoauth3.domain.security.Client;
 import trident.healthx.milestone3.springoauth3.domain.security.User;
 import trident.healthx.milestone3.springoauth3.exception.UserAlreadyExistsException;
 import trident.healthx.milestone3.springoauth3.repository.security.UserRepository;
@@ -36,6 +35,10 @@ public class UserService {
 
     public List<User> getAllUsers(){
         return userRepository.findAll();
+    }
+
+    public User getUser( String username){
+        return userRepository.findByUsername(username).orElseThrow(()->{throw new UsernameNotFoundException("User "+username+"not found");});
     }
 
 
